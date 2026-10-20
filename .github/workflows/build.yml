@@ -14,26 +14,23 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Create Webview Android App
+      - name: Build Simple App
         run: |
-          mkdir -p android_app/app/src/main/assets
-          mkdir -p android_app/app/src/main/java/com/example/myapp
+          mkdir -p myapp/app/src/main/assets
+          mkdir -p myapp/app/src/main/java/com/app/test
 
-          cp index.html android_app/app/src/main/assets/ || true
+          cp index.html myapp/app/src/main/assets/ || true
 
-          cat << 'EOF' > android_app/settings.gradle
+          cat << 'EOF' > myapp/settings.gradle
           include ':app'
           EOF
 
-          cat << 'EOF' > android_app/build.gradle
+          cat << 'EOF' > myapp/build.gradle
           buildscript {
               repositories { google(); mavenCentral() }
               dependencies { classpath 'com.android.tools.build:gradle:8.1.1' }
@@ -41,13 +38,13 @@ jobs:
           allprojects { repositories { google(); mavenCentral() } }
           EOF
 
-          cat << 'EOF' > android_app/app/build.gradle
+          cat << 'EOF' > myapp/app/build.gradle
           plugins { id 'com.android.application' }
           android {
-              namespace 'com.example.myapp'
+              namespace 'com.app.test'
               compileSdk 33
               defaultConfig {
-                  applicationId "com.example.myapp"
+                  applicationId "com.app.test"
                   minSdk 21
                   targetSdk 33
                   versionCode 1
@@ -56,14 +53,10 @@ jobs:
           }
           EOF
 
-          cat << 'EOF' > android_app/app/src/main/AndroidManifest.xml
+          cat << 'EOF' > myapp/app/src/main/AndroidManifest.xml
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
               <uses-permission android:name="android.permission.INTERNET"/>
-              <application
-                  android:allowBackup="true"
-                  android:label="My App"
-                  android:supportsRtl="true"
-                  android:theme="@android:style/Theme.Material.Light.NoActionBar">
+              <application android:label="My App">
                   <activity android:name=".MainActivity" android:exported="true">
                       <intent-filter>
                           <action android:name="android.intent.action.MAIN"/>
@@ -74,39 +67,32 @@ jobs:
           </manifest>
           EOF
 
-          cat << 'EOF' > android_app/app/src/main/java/com/example/myapp/MainActivity.java
-          package com.example.myapp;
+          cat << 'EOF' > myapp/app/src/main/java/com/app/test/MainActivity.java
+          package com.app.test;
           import android.app.Activity;
           import android.os.Bundle;
           import android.webkit.WebView;
           import android.webkit.WebViewClient;
-          import android.webkit.WebSettings;
 
           public class MainActivity extends Activity {
               @Override
               protected void onCreate(Bundle savedInstanceState) {
                   super.onCreate(savedInstanceState);
-                  WebView webView = new WebView(this);
-                  WebSettings webSettings = webView.getSettings();
-                  webSettings.setJavaScriptEnabled(true);
-                  webSettings.setDomStorageEnabled(true);
-                  webView.setWebViewClient(new WebViewClient());
-                  webView.loadUrl("file:///android_asset/index.html");
-                  setContentView(webView);
+                  WebView wv = new WebView(this);
+                  wv.getSettings().setJavaScriptEnabled(true);
+                  wv.setWebViewClient(new WebViewClient());
+                  wv.loadUrl("file:///android_asset/index.html");
+                  setContentView(wv);
               }
           }
           EOF
 
-          cd android_app
+          cd myapp
           gradle wrapper
-
-      - name: Build Debug APK
-        run: |
-          cd android_app
           ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: my-app-debug
-          path: android_app/app/build/outputs/apk/debug/app-debug.apk
+          name: app-debug
+          path: myapp/app/build/outputs/apk/debug/app-debug.apk
