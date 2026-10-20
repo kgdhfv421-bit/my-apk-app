@@ -13,22 +13,104 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Set up JDK 17
+      - name: Set up Java
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x apkforge/android-template/gradlew || true
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
 
-      - name: Build APK with Gradle
+      - name: Create Webview Android App
         run: |
-          cd apkforge/android-template
+          mkdir -p android_app/app/src/main/assets
+          mkdir -p android_app/app/src/main/java/com/example/myapp
+          mkdir -p android_app/app/src/main/res/mipmap-hdpi
+
+          # Copy web files
+          cp index.html android_app/app/src/main/assets/ || true
+
+          # Build settings
+          cat << 'EOF' > android_app/settings.gradle
+          include ':app'
+          EOF
+
+          cat << 'EOF' > android_app/build.gradle
+          buildscript {
+              repositories { google(); mavenCentral() }
+              dependencies { classpath 'com.android.tools.build:gradle:8.1.1' }
+          }
+          allprojects { repositories { google(); mavenCentral() } }
+          EOF
+
+          cat << 'EOF' > android_app/app/build.gradle
+          plugins { id 'com.android.application' }
+          android {
+              namespace 'com.example.myapp'
+              compileSdk 33
+              defaultConfig {
+                  applicationId "com.example.myapp"
+                  minSdk 21
+                  targetSdk 33
+                  versionCode 1
+                  versionName "1.0"
+              }
+          }
+          EOF
+
+          cat << 'EOF' > android_app/app/src/main/AndroidManifest.xml
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+              <uses-permission android:name="android.permission.INTERNET"/>
+              <application
+                  android:allowBackup="true"
+                  android:label="My App"
+                  android:supportsRtl="true"
+                  android:theme="@android:style/Theme.Material.Light.NoActionBar">
+                  <activity android:name=".MainActivity" android:exported="true">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN"/>
+                          <category android:name="android.intent.category.LAUNCHER"/>
+                      </intent-filter>
+                  </activity>
+              </application>
+          </manifest>
+          EOF
+
+          cat << 'EOF' > android_app/app/src/main/java/com/example/myapp/MainActivity.java
+          package com.example.myapp;
+          import android.app.Activity;
+          import android.os.Bundle;
+          import android.webkit.WebView;
+          import android.webkit.WebViewClient;
+          import android.webkit.WebSettings;
+
+          public class MainActivity extends Activity {
+              @Override
+              protected void onCreate(Bundle savedInstanceState) {
+                  super.onCreate(savedInstanceState);
+                  WebView webView = new WebView(this);
+                  WebSettings webSettings = webView.getSettings();
+                  webSettings.setJavaScriptEnabled(true);
+                  webSettings.setDomStorageEnabled(true);
+                  webView.setWebViewClient(new WebViewClient());
+                  webView.loadUrl("file:///android_asset/index.html");
+                  setContentView(webView);
+              }
+          }
+          EOF
+
+          # Create Gradle wrapper
+          cd android_app
+          gradle wrapper
+
+      - name: Build Debug APK
+        run: |
+          cd android_app
           ./gradlew assembleDebug
 
-      - name: Upload APK Artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-          name: app-debug.apk
-          path: apkforge/android-template/app/build/outputs/apk/debug/app-debug.apk
+          name: my-app-debug.apk
+          path: android_app/app/build/outputs/apk/debug/app-debug.apk
