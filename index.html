@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>APKForge – HTML to APK</title>
+<meta name="theme-color" content="#2563eb">
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#0f172a;--mut:#64748b;--line:#e2e8f0;--pri:#2563eb;--pri2:#1d4ed8;--soft:#eff4ff;--ok:#16a34a;--bad:#dc2626;--warn:#d97706;--r:18px}
+@media(prefers-color-scheme:dark){:root{--bg:#0b1020;--card:#131a2e;--ink:#e8edf7;--mut:#8b97b3;--line:#232d49;--soft:#18223d}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Bengali",sans-serif;padding-bottom:84px}
+a{color:var(--pri)}button,input,select,textarea{font:inherit;color:inherit}
+.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:.3px;cursor:pointer}
+.logo i{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--pri);color:#fff;font-style:normal;font-weight:800}
+.spacer{flex:1}.av{width:34px;height:34px;border-radius:50%;background:var(--soft);object-fit:cover;display:grid;place-items:center;font-weight:700;cursor:pointer}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:var(--card);border-top:1px solid var(--line);display:flex;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+nav a{flex:1;text-align:center;text-decoration:none;color:var(--mut);font-size:11.5px;padding:4px 0}nav a b{display:block;font-size:20px;line-height:1.2}nav a.on{color:var(--pri);font-weight:700}
+@media(min-width:860px){body{padding-bottom:0}nav{position:static;border:0;background:none;padding:0;order:2;flex:0}nav a{display:flex;gap:6px;align-items:center;padding:8px 12px;border-radius:10px;font-size:14px;white-space:nowrap}nav a b{font-size:15px;display:inline}nav a.on{background:var(--soft)}}
+main{max-width:980px;margin:0 auto;padding:16px}
+.hero{background:linear-gradient(135deg,#1e3a8a,#2563eb 55%,#0891b2);color:#fff;border-radius:24px;padding:22px}
+.hero h2{margin:0 0 14px;font-size:22px}.hero .row{display:flex;flex-wrap:wrap;gap:10px}
+.btn{border:0;border-radius:14px;padding:12px 18px;font-weight:700;cursor:pointer;background:var(--pri);color:#fff;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.btn:hover{background:var(--pri2)}.btn.ghost{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35)}.btn.white{background:#fff;color:var(--pri)}
+.btn.line{background:transparent;color:var(--ink);border:1px solid var(--line)}.btn.red{background:var(--bad)}.btn.sm{padding:8px 12px;border-radius:10px;font-size:13px}.btn[disabled]{opacity:.5;pointer-events:none}
+.grid{display:grid;gap:12px}.g2{grid-template-columns:repeat(2,1fr)}.g4{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}.gp{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.stat b{font-size:26px;display:block}.stat span{color:var(--mut)}
+h3{margin:22px 0 10px;font-size:18px}h1{font-size:22px;margin:6px 0 14px}
+.proj .thumb{height:90px;border-radius:12px;background:var(--soft);display:grid;place-items:center;margin-bottom:10px;overflow:hidden;font-size:34px}
+.proj .thumb img{width:100%;height:100%;object-fit:contain}
+.proj h4{margin:0}.mut{color:var(--mut);font-size:13px}.acts{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+label.f{display:block;margin:12px 0 4px;font-weight:600;font-size:13px;color:var(--mut)}
+input[type=text],input[type=password],input[type=email],input[type=number],input[type=url],select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--pri)}textarea{min-height:200px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.chk{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}.chk:last-child{border:0}
+.chk input{margin-top:3px;width:20px;height:20px;accent-color:var(--pri);flex:none}.chk small{display:block;color:var(--mut)}.chk code{font-size:11px;color:var(--pri)}
+.progress{height:8px;background:var(--line);border-radius:8px;overflow:hidden;margin:6px 0 16px}.progress i{display:block;height:100%;background:var(--pri);transition:width .3s}
+.steps{display:flex;justify-content:space-between;color:var(--pri);font-weight:700;font-size:13px}
+.foot{display:flex;gap:10px;margin-top:16px}.foot .btn{flex:1;justify-content:center}
+.sw{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}.sw span{width:38px;height:38px;border-radius:50%;border:3px solid transparent;cursor:pointer;outline:1px solid var(--line)}.sw span.on{border-color:var(--ink)}
+.seg{display:flex;gap:8px;flex-wrap:wrap}.seg button{padding:8px 14px;border-radius:12px;border:1px solid var(--line);background:none;cursor:pointer}.seg button.on{background:var(--soft);border-color:var(--pri);color:var(--pri);font-weight:700}
+.ok{background:var(--soft);border:1px solid var(--pri);border-radius:12px;padding:12px;margin-top:12px}.ok.w{border-color:var(--warn);background:rgba(217,119,6,.1)}.ok.e{border-color:var(--bad);background:rgba(220,38,38,.1)}
+.sum{display:flex;justify-content:space-between;gap:10px;padding:12px;background:var(--bg);border-radius:12px;margin-top:8px;align-items:center}.sum b{display:block;font-size:12px;color:var(--mut);font-weight:600}
+iconbox{display:grid;place-items:center;width:110px;height:110px;border-radius:26px;background:var(--bg);border:1px dashed var(--line);overflow:hidden;font-size:34px}iconbox img{width:100%;height:100%;object-fit:cover}
+.bc{background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;border-radius:22px;padding:20px}.dots{display:flex;justify-content:space-between;margin-top:18px}.dots div{text-align:center;font-size:12px;opacity:.7}.dots div.on{opacity:1}.dots i{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.3);margin:0 auto 4px;font-style:normal}.dots .on i{background:#fff;color:#4f46e5}
+.term{background:#0b1220;color:#cbd5e1;border-radius:16px;padding:14px;font:12.5px/1.6 ui-monospace,Menlo,monospace;max-height:320px;overflow:auto;margin-top:14px;white-space:pre-wrap;word-break:break-all}.term u{text-decoration:none;color:#64748b}
+.modal{position:fixed;inset:0;background:rgba(2,6,23,.6);display:grid;place-items:center;z-index:50;padding:16px}.modal .box{background:var(--card);border-radius:24px;width:100%;max-width:400px;overflow:hidden}
+.modal .hd{background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;text-align:center;padding:26px 16px}.modal .bd{padding:16px}.kv{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;background:#0f172a;color:#fff;padding:12px 18px;border-radius:14px;z-index:90;max-width:90%}
+.login{min-height:100vh;display:grid;place-items:center;padding:16px;background:linear-gradient(135deg,#1e3a8a,#2563eb 55%,#0891b2)}.login .card{max-width:400px;width:100%;text-align:center;padding:28px}
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;background:var(--soft);color:var(--pri);font-size:12px;font-weight:700}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--ok);margin-right:6px}
+.tabs{display:flex;gap:6px;background:var(--bg);padding:5px;border-radius:14px;margin:14px 0}.tabs button{flex:1;border:0;padding:10px;border-radius:10px;background:none;cursor:pointer;font-weight:600}.tabs button.on{background:var(--pri);color:#fff}
+iframe.pv{width:100%;height:380px;border:1px solid var(--line);border-radius:14px;background:#fff;margin-top:10px}
+table{width:100%;border-collapse:collapse}td,th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}
+.tpl{cursor:pointer}.tpl:hover{border-color:var(--pri)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+/* ============ helpers ============ */
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const store = { get: k => { try { return localStorage.getItem(k) } catch (_) { return null } }, set: (k, v) => { try { localStorage.setItem(k, v) } catch (_) {} }, del: k => { try { localStorage.removeItem(k) } catch (_) {} } };
+let TOKEN = store.get('tk'), ME = null, CFG = {};
+function toast(m, ms = 3200) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = m; document.body.append(t); setTimeout(() => t.remove(), ms); }
+async function api(path, opt = {}, tok = TOKEN) {
+  const r = await fetch(path, { method: opt.method || 'GET', headers: { 'Content-Type': 'application/json', ...(tok ? { Authorization: 'Bearer ' + tok } : {}) }, body: opt.body ? JSON.stringify(opt.body) : undefined });
+  const j = await r.json().catch(() => ({}));
+  if (r.status === 401 && tok === TOKEN && TOKEN) { logout(); throw new Error('Session expired'); }
+  if (!r.ok) throw new Error(j.error || 'Request failed');
+  return j;
+}
+const mb = b => (b / 1048576).toFixed(2) + ' MB';
+const ago = t => { const s = (Date.now() - t) / 1000; return s < 60 ? 'just now' : s < 3600 ? ~~(s / 60) + 'm ago' : s < 86400 ? ~~(s /3600) + 'h ago' : ~~(s / 86400) + 'd ago'; };
+const slug = s => { let x = String(s).toLowerCase().replace(/[^a-z0-9]/g, ''); if (!x || /^\d/.test(x)) x = 'app' + x; return x.slice(0, 30); };
+function fileToText(f) { return new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsText(f); }); }
+function imgToDataUrl(file, size) {
+  return new Promise((res, rej) => {
+    const im = new Image(); im.onload = () => {
+      const c = document.createElement('canvas'); c.width = c.height = size; const x = c.getContext('2d'); const m = Math.min(im.width, im.height);
+      x.drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, size, size); res(c.toDataURL('image/png'));
+    }; im.onerror = rej; im.src = URL.createObjectURL(file);
+  });
+}
+function setPath(o, p, v) { const k = p.split('.'); let c = o; while (k.length > 1) c = c[k.shift()] ??= {}; c[k[0]] = v; }
+function getPath(o, p) { return p.split('.').reduce((a, k) => a?.[k], o); }
+function modal(html) { const m = document.createElement('div'); m.className = 'modal'; m.innerHTML = `<div class="box">${html}</div>`; m.onclick = e => { if (e.target === m) m.remove(); }; document.body.append(m); return m; }
+
+/* ============ auth ============ */
+function logout() { store.del('tk'); TOKEN = null; ME = null; route(); }
+async function onGoogle(resp) {
+  try { const r = await api('/api/auth/google', { method: 'POST', body: { credential: resp.credential } }, null); TOKEN = r.token; store.set('tk', TOKEN); location.hash = '#/home'; await boot(); }
+  catch (e) { toast(e.message); }
+}
+function loginPage() {
+  $('#app').innerHTML = `<div class="login"><div class="card">
+    <div class="logo" style="justify-content:center;font-size:26px"><i>{w}</i> APKForge</div>
+    <p class="mut" style="margin:14px 0 22px">Turn any HTML / website into an Android APK.<br>Sign in with your Gmail account to start.</p>
+    <div id="gbtn" style="display:flex;justify-content:center;min-height:44px"></div>
+    ${CFG.devLogin ? `<hr style="border:0;border-top:1px solid var(--line);margin:22px 0"><p class="mut">Developer login (local testing)</p><input type="email" id="devemail" placeholder="you@gmail.com"><button class="btn" style="width:100%;justify-content:center;margin-top:10px" id="devgo">Continue</button>` : ''}
+    ${!CFG.googleClientId && !CFG.devLogin ? '<div class="ok e">Server has no GOOGLE_CLIENT_ID configured.</div>' : ''}
+  </div></div>`;
+  if (CFG.devLogin) $('#devgo').onclick = async () => { try { const r = await api('/api/auth/dev', { method: 'POST', body: { email: $('#devemail').value } }, null); TOKEN = r.token; store.set('tk', TOKEN); location.hash = '#/home'; await boot(); } catch (e) { toast(e.message); } };
+  if (CFG.googleClientId) {
+    const init = () => { if (!window.google?.accounts) return setTimeout(init, 300); google.accounts.id.initialize({ client_id: CFG.googleClientId, callback: onGoogle }); google.accounts.id.renderButton($('#gbtn'), { theme: 'outline', size: 'large', text: 'continue_with', width: 280 }); };
+    init();
+  }
+}
+
+/* ============ shell ============ */
+const NAV = [['home', '🏠', 'Home'], ['projects', '📁', 'Projects'], ['push', '🔔', 'Push'], ['updates', '⬆️', 'Updates'], ['more', '☰', 'More']];
+function shell(active, html) {
+  $('#app').innerHTML = `<div class="top"><div class="logo" onclick="location.hash='#/home'"><i>{w}</i>APKForge</div><div class="spacer"></div>
+    <nav>${NAV.map(([k, i, l]) => `<a href="#/${k}" class="${k === active ? 'on' : ''}"><b>${i}</b>${l}</a>`).join('')}</nav>
+    ${ME?.picture ? `<img class="av" src="${esc(ME.picture)}" referrerpolicy="no-referrer" onclick="location.hash='#/more'">` : `<div class="av" onclick="location.hash='#/more'">${esc((ME?.name || '?')[0].toUpperCase())}</div>`}</div><main>${html}</main>`;
+  window.scrollTo(0, 0);
+}
+function projCard(p) {
+  return `<div class="card proj"><div class="thumb">${p.hasIcon ? `<img src="/api/projects/${p.id}/icon?t=${TOKEN}" onerror="this.replaceWith('🤖')">` : '🤖'}</div>
+  <h4>${esc(p.name)}</h4><div class="mut">${esc(p.packageName)} · v${esc(p.versionName)} (${p.versionCode})</div><div class="mut">${ago(p.updated)}${p.lastBuild ? ' · built ✓' : ''}</div>
+  <div class="acts"><button class="btn line sm" onclick="location.hash='#/wizard/${p.id}'">Edit</button><button class="btn sm" onclick="quickBuild('${p.id}')">Build</button><button class="btn line sm" onclick="exportProject('${p.id}')">Export</button><button class="btn line sm" onclick="delProject('${p.id}')">Del</button></div></div>`;
+}
+async function quickBuild(id) { try { const r = await api(`/api/projects/${id}/build`, { method: 'POST', body: {} }); location.hash = `#/build/${r.buildId}`; } catch (e) { toast(e.message, 6000); } }
+async function delProject(id) { if (!confirm('Delete this project?')) return; await api('/api/projects/' + id, { method: 'DELETE' }); route(); }
+async function exportProject(id) { const p = await api('/api/projects/' + id); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(p)], { type: 'application/json' })); a.download = p.name.replace(/\W+/g, '_') + '.apkforge.json'; a.click(); }
+
+/* ============ pages ============ */
+async function pageHome() {
+  const [me, ps] = await Promise.all([api('/api/me'), api('/api/projects')]);
+  shell('home', `<div class="hero"><h2>Welcome back, ${esc(ME.name.split(' ')[0])} 👋</h2><div class="row">
+    <button class="btn white" onclick="location.hash='#/wizard'">＋ New Project</button>
+    <button class="btn ghost" onclick="location.hash='#/projects'">⚡ Build APK</button>
+    <button class="btn ghost" onclick="location.hash='#/templates'">▦ Templates</button>
+    <button class="btn ghost" onclick="importProject()">⇪ Import Project</button></div></div>
+  <div class="grid g4" style="margin-top:14px">
+    <div class="card stat"><b>${me.stats.projects}</b><span>My Projects</span></div><div class="card stat"><b>${me.stats.builds}</b><span>Builds</span></div>
+    <div class="card stat"><b>${me.stats.apps}</b><span>Published apps</span></div><div class="card stat"><b>Free</b><span>All features</span></div></div>
+  <h3>My Projects <a href="#/projects" style="font-size:14px;float:right">See all ›</a></h3>
+  <div class="grid gp"><div class="card" style="display:grid;place-items:center;min-height:190px;border-style:dashed;cursor:pointer" onclick="location.hash='#/wizard'"><div style="text-align:center"><div style="font-size:30px">＋</div><span class="mut">New Project</span></div></div>${ps.slice(0, 5).map(projCard).join('')}</div>`);
+}
+function importProject() {
+  const i = document.createElement('input'); i.type = 'file'; i.accept = '.json'; i.onchange = async () => {
+    try { const p = JSON.parse(await fileToText(i.files[0])); delete p.id; delete p.owner; await api('/api/projects', { method: 'POST', body: p }); toast('Project imported'); location.hash = '#/projects'; route(); } catch (e) { toast('Import failed: ' + e.message); }
+  }; i.click();
+}
+async function pageProjects() {
+  const ps = await api('/api/projects');
+  shell('projects', `<h1>My Projects</h1><div class="grid gp"><div class="card" style="display:grid;place-items:center;min-height:190px;border-style:dashed;cursor:pointer" onclick="location.hash='#/wizard'"><div style="text-align:center"><div style="font-size:30px">＋</div><span class="mut">New Project</span></div></div>${ps.map(projCard).join('')}</div>`);
+}
+const TEMPLATES = [
+  { n: 'Blank page', e: '📄', html: '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My App</title></head><body style="font-family:sans-serif;padding:24px"><h1>Hello 👋</h1><p>Edit me.</p></body></html>' },
+  { n: 'Counter', e: '🔢', html: '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Counter</title><style>body{margin:0;height:100vh;display:grid;place-items:center;font-family:sans-serif;background:#111;color:#fff}button{font-size:28px;padding:12px 28px;border-radius:14px;border:0;background:#2563eb;color:#fff}</style></head><body><div style="text-align:center"><h1 id=n style="font-size:80px;margin:0">0</h1><button onclick="n.textContent=+n.textContent+1;window.AndroidDownloader&&AndroidDownloader.vibrate(30)">+1</button></div></body></html>' },
+  { n: 'Todo list', e: '✅', html: '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Todo</title><style>body{font-family:sans-serif;max-width:500px;margin:auto;padding:20px}li{padding:8px 0}</style></head><body><h2>Todo</h2><input id=t placeholder="New task" style="padding:10px;width:70%"><button onclick="if(t.value){l.insertAdjacentHTML(\'beforeend\',\'<li>\'+t.value.replace(/</g,\'&lt;\')+\'</li>\');t.value=\'\'}" style="padding:10px">Add</button><ul id=l></ul></body></html>' },
+  { n: 'Website wrapper', e: '🌐', url: 'https://example.com' },
+];
+function pageTemplates() {
+  shell('more', `<h1>Templates</h1><div class="grid gp">${TEMPLATES.map((t, i) => `<div class="card tpl" onclick="useTpl(${i})"><div style="font-size:34px">${t.e}</div><h4 style="margin:8px 0 0">${t.n}</h4><span class="mut">Tap to start</span></div>`).join('')}</div>`);
+}
+function useTpl(i) { const t = TEMPLATES[i]; W = newW(); W.name = t.n; if (t.html) { W.sourceType = 'html'; W.html = t.html; W.fileName = t.n + '.html'; } else { W.sourceType = 'url'; W.url = t.url; } W.packageName = autoPkg(W.name); location.hash = '#/wizard/new'; }
+function pageMore() {
+  shell('more', `<h1>More</h1><div class="card"><b>${esc(ME.name)}</b><div class="mut">${esc(ME.email)}</div></div>
+  <div class="grid gp" style="margin-top:12px"><div class="card tpl" onclick="location.hash='#/templates'">▦ Templates</div><div class="card tpl" onclick="importProject()">⇪ Import project</div><div class="card tpl" onclick="logout()">↩ Sign out</div></div>
+  <h3>JavaScript API inside your HTML</h3><div class="card"><code>AndroidDownloader.shareApp()</code> · <code>rateApp()</code> · <code>toast("hi")</code> · <code>vibrate(50)</code> · <code>download(url)</code></div>`);
+}
+
+/* ---------- wizard ---------- */
+const PERMS = [
+  ['android.permission.INTERNET', 'Internet', 'Web pages, URL content and external API calls', 1], ['android.permission.ACCESS_NETWORK_STATE', 'Network State', 'Check whether the device is online', 1],
+  ['android.permission.READ_EXTERNAL_STORAGE', 'Read Storage', 'Local files (Android 12 and below)'], ['android.permission.WRITE_EXTERNAL_STORAGE', 'Write Storage', 'Save files (Android 9 and below)'],
+  ['android.permission.READ_MEDIA_IMAGES', 'Read Images', 'Access photos on Android 13+'], ['android.permission.READ_MEDIA_VIDEO', 'Read Videos', 'Access videos on Android 13+'], ['android.permission.READ_MEDIA_AUDIO', 'Read Audio', 'Access music and audio files on Android 13+'],
+  ['android.permission.CAMERA', 'Camera', 'Camera access for web apps'], ['android.permission.RECORD_AUDIO', 'Microphone', 'Audio recording for apps'],
+  ['android.permission.ACCESS_FINE_LOCATION', 'Precise Location', 'Precise location access'], ['android.permission.ACCESS_COARSE_LOCATION', 'Approximate Location', 'Approximate location access'],
+  ['android.permission.POST_NOTIFICATIONS', 'Notifications', 'Show push notifications on Android 13+'], ['android.permission.VIBRATE', 'Vibration', 'Control the device vibration motor'],
+  ['android.permission.ACTIVITY_RECOGNITION', 'Activity Recognition', 'Step counter and physical activity sensors'], ['android.permission.READ_PHONE_STATE', 'Phone State', 'Read phone state'],
+  ['android.permission.WAKE_LOCK', 'Wake Lock', 'Keep the CPU awake'], ['android.permission.BLUETOOTH_CONNECT', 'Bluetooth', 'Connect to paired devices'],
+];
+const COLORS = ['#FFFFFF', '#111111', '#2196F3', '#2563EB', '#334155', '#00E5C0', '#16A34A', '#DC2626', '#F59E0B', '#7C3AED'];
+const STEP_NAMES = ['Basics', 'Content', 'Display', 'Permissions', 'Icon', 'Splash', 'WebView', 'Ads', 'Push & Update', 'Summary'];
+let W = null, STEP = 0, MYAPPS = [];
+const autoPkg = n => 'com.apkforge.' + slug(n || 'myapp');
+const newW = () => ({
+  name: '', packageName: 'com.apkforge.myapp', _pkgEdited: false, versionName: '1.0', versionCode: 1, sourceType: 'html', html: '', fileName: '', url: 'https://',
+  orientation: 'portrait', showStatusBar: true, showActionBar: false, keepScreenOn: false, cutout: false, desktopMode: false, theme: 'auto', barColor: '#2196F3', splashColor: '#FFFFFF',
+  permissions: ['android.permission.INTERNET', 'android.permission.ACCESS_NETWORK_STATE', 'android.permission.VIBRATE'], icon: '', splash: '',
+  webview: { pullToRefresh: false, noInternetDialog: true, loadingIndicator: true, backNavigation: true, exitConfirm: false, javascript: true, domStorage: true, fileAccess: false, contentAccess: false, zoom: false, wideViewport: true, overview: false, geolocation: false, mediaAutoplay: true, longPressMenu: true, cacheMode: 'default', mixedContent: 'compat' },
+  ads: { enabled: false, appId: '', banner: '', interstitial: '' }, push: { enabled: true, password: '' }, update: { force: true, notes: '' }, shareMessage: '', shareLink: '', customCss: '', customJs: '',
+});
+async function pageWizard(id) {
+  MYAPPS = await api('/api/updates').catch(() => []);
+  if (id && id !== 'new') { const p = await api('/api/projects/' + id); W = Object.assign(newW(), p, { _pkgEdited: true, fileName: p.sourceType === 'html' ? 'saved HTML' : '' }); W.webview = Object.assign(newW().webview, p.webview); W.push = Object.assign({ enabled: true, password: '' }, p.push, { password: '' }); STEP = 0; W._id = id; }
+  else if (id === 'new' && W) { STEP = W.name ? 1 : 0; } else { W = newW(); STEP = 0; }
+  renderStep();
+}
+function chk(k, t, d) { return `<label class="chk"><input type="checkbox" data-k="${k}" ${getPath(W, k) ? 'checked' : ''}><span>${t}<small>${d || ''}</small></span></label>`; }
+function seg(k, opts) { return `<div class="seg" data-seg="${k}">${opts.map(([v, l]) => `<button type="button" data-v="${v}" class="${getPath(W, k) === v ? 'on' : ''}">${l}</button>`).join('')}</div>`; }
+function renderStep() {
+  const s = STEP, pct = Math.round((s + 1) / 10 * 100); let h = '';
+  if (s === 0) {
+    const mine = MYAPPS.find(a => a.packageName === W.packageName);
+    h = `<h3 style="margin-top:0">App Info</h3>
+    <label class="f">App name</label><input type="text" data-k="name" value="${esc(W.name)}" placeholder="My Awesome App" maxlength="60">
+    <label class="f">Package name (auto-generated — used for Push &amp; Updates)</label><input type="text" data-k="packageName" value="${esc(W.packageName)}" autocapitalize="none" spellcheck="false">
+    <div class="grid g2"><div><label class="f">Version name</label><input type="text" data-k="versionName" value="${esc(W.versionName)}"></div><div><label class="f">Version code</label><input type="number" min="1" data-k="versionCode" data-num="1" value="${W.versionCode}"></div></div>
+    ${mine ? `<div class="ok w">⚠️ You already built <b>${esc(mine.packageName)}</b> (v${esc(mine.versionName)}, code ${mine.versionCode}). Building again with a <b>higher version code</b> pushes an <b>Update Required</b> screen to everyone who has the old app installed.<br><button class="btn sm" style="margin-top:8px" onclick="W.versionCode=${mine.versionCode + 1};renderStep()">Use version code ${mine.versionCode + 1}</button></div>` : `<div class="ok">New package. Use this package name later to send push notifications.</div>`}`;
+  } else if (s === 1) {
+    h = `<h3 style="margin-top:0">Content Source</h3>${seg('sourceType', [['html', 'HTML file / code'], ['url', 'Website URL']])}
+    ${W.sourceType === 'html' ? `<div style="margin-top:12px"><button class="btn line sm" id="pick">📄 Select HTML file</button> <span class="mut" id="fn">${esc(W.fileName)}</span></div>
+      <label class="f">…or paste your code</label><textarea data-k="html" id="code" spellcheck="false" placeholder="<!doctype html>…">${esc(W.html)}</textarea>
+      <div class="acts"><button class="btn line sm" id="pv">👁 Preview</button></div><div id="chkbox"></div><div id="pvbox"></div>` :
+      `<label class="f">Website URL</label><input type="url" data-k="url" value="${esc(W.url)}" placeholder="https://example.com">`}`;
+  } else if (s === 2) {
+    h = `<h3 style="margin-top:0">Display Settings</h3><label class="f">Orientation</label>${seg('orientation', [['portrait', 'Portrait'], ['landscape', 'Landscape'], ['auto', 'Auto']])}
+    ${chk('showStatusBar', 'Show status bar', 'Keep the top system status bar visible')}${chk('showActionBar', 'Show action bar', 'Keep the app title bar visible')}${chk('keepScreenOn', 'Keep screen on', 'Prevent the screen from turning off')}${chk('cutout', 'Show camera cutout', 'Let content extend into the notch / punch hole area')}${chk('desktopMode', 'Desktop mode', 'Load web pages in desktop browser layout')}
+    <h3>Colors</h3><label class="f">Website theme</label>${seg('theme', [['auto', 'Automatic'], ['night', 'Night'], ['day', 'Day']])}
+    <label class="f">Status &amp; navigation bar color</label><div class="sw" data-sw="barColor">${COLORS.map(c => `<span data-c="${c}" style="background:${c}" class="${W.barColor.toLowerCase() === c.toLowerCase() ? 'on' : ''}"></span>`).join('')}<input type="color" value="${W.barColor}" data-k="barColor" style="width:44px;height:40px;border:0;background:none"></div>`;
+  } else if (s === 3) {
+    h = `<h3 style="margin-top:0">Permissions</h3><p class="mut">Only select what your app needs. More permissions = less user trust.</p>${PERMS.map(([id, n, d, lock]) => `<label class="chk"><input type="checkbox" data-perm="${id}" ${W.permissions.includes(id) ? 'checked' : ''} ${lock ? 'disabled checked' : ''}><span>${n}<small>${d}</small><code>${id}</code></span></label>`).join('')}`;
+  } else if (s === 4) {
+    h = `<h3 style="margin-top:0">App Icon</h3><p class="mut">Choose a square image. This will be your app's icon on the phone.</p><div style="display:flex;gap:16px;align-items:center"><iconbox>${W.icon ? `<img src="${W.icon}">` : '🖼'}</iconbox><button class="btn line" id="pickicon">Pick from Gallery</button></div>`;
+  } else if (s === 5) {
+    h = `<h3 style="margin-top:0">Splash Screen</h3><p class="mut">Shown while the app starts. Optional image (defaults to the icon).</p><label class="f">Background color</label><div class="sw" data-sw="splashColor">${COLORS.map(c => `<span data-c="${c}" style="background:${c}" class="${W.splashColor.toLowerCase() === c.toLowerCase() ? 'on' : ''}"></span>`).join('')}</div>
+    <div style="display:flex;gap:16px;align-items:center;margin-top:16px"><iconbox style="background:${W.splashColor}">${W.splash || W.icon ? `<img src="${W.splash || W.icon}">` : '🖼'}</iconbox><button class="btn line" id="picksplash">Pick splash image</button></div>`;
+  } else if (s === 6) {
+    h = `<h3 style="margin-top:0">Navigation &amp; Experience</h3>${chk('webview.pullToRefresh', 'Pull to refresh', 'Swipe down to reload the page')}${chk('webview.noInternetDialog', 'No internet dialog', 'Alert with retry when connection is lost')}${chk('webview.loadingIndicator', 'Loading indicator', 'Progress bar while loading')}${chk('webview.backNavigation', 'Back button history navigation', 'Back goes to previous page')}${chk('webview.exitConfirm', 'Exit confirmation', 'Press back twice to exit')}
+    <h3>Advanced WebView</h3>${chk('webview.javascript', 'JavaScript enabled')}${chk('webview.domStorage', 'DOM storage (localStorage)')}${chk('webview.fileAccess', 'Allow file access')}${chk('webview.contentAccess', 'Allow content access')}${chk('webview.zoom', 'Pinch zoom')}${chk('webview.wideViewport', 'Use wide viewport')}${chk('webview.overview', 'Load with overview mode')}${chk('webview.geolocation', 'Geolocation', 'Also add a location permission')}${chk('webview.mediaAutoplay', 'Media autoplay')}${chk('webview.longPressMenu', 'Long-press context menu')}
+    <label class="f">Cache mode</label>${seg('webview.cacheMode', [['default', 'Default'], ['none', 'No cache'], ['cache', 'Cache first']])}<label class="f">Mixed content</label>${seg('webview.mixedContent', [['compat', 'Compatibility'], ['always', 'Allow all'], ['never', 'Block']])}
+    <h3>Share &amp; Rate</h3><label class="f">Share message</label><input type="text" data-k="shareMessage" value="${esc(W.shareMessage)}" placeholder="Check out this app!"><label class="f">Share link (optional)</label><input type="url" data-k="shareLink" value="${esc(W.shareLink)}" placeholder="https://play.google.com/store/apps/details?id=…">
+    <h3>Custom CSS / JS</h3><label class="f">CSS injected into every page</label><textarea data-k="customCss" style="min-height:70px">${esc(W.customCss)}</textarea><label class="f">JavaScript run after each page load</label><textarea data-k="customJs" style="min-height:70px">${esc(W.customJs)}</textarea>`;
+  } else if (s === 7) {
+    h = `<h3 style="margin-top:0">AdMob Ads</h3>${chk('ads.enabled', 'Enable AdMob ads', 'Banner + interstitial in your app')}${W.ads.enabled ? `<label class="f">AdMob App ID</label><input type="text" data-k="ads.appId" value="${esc(W.ads.appId)}" placeholder="ca-app-pub-xxxxxxxx~yyyyyyyy"><label class="f">Banner Ad Unit ID</label><input type="text" data-k="ads.banner" value="${esc(W.ads.banner)}" placeholder="ca-app-pub-xxxxxxxx/zzzzzzzz"><label class="f">Interstitial Ad Unit ID</label><input type="text" data-k="ads.interstitial" value="${esc(W.ads.interstitial)}"><div class="ok w">Leave IDs empty to use Google's test ads. Use your own IDs before publishing.</div>` : ''}`;
+  } else if (s === 8) {
+    h = `<h3 style="margin-top:0">🔔 Push Notifications</h3>${chk('push.enabled', 'Enable push notifications (FCM)', 'Send notifications to everyone who installs this app')}
+    ${W.push.enabled ? `<label class="f">Push dashboard password (min 6 chars)</label><input type="password" data-k="push.password" value="${esc(W.push.password)}" placeholder="${MYAPPS.find(a => a.packageName === W.packageName) ? 'Leave empty to keep the existing password' : 'Choose a password'}" autocomplete="new-password">
+    <div class="ok">Login to the <a href="#/push">Push dashboard</a> with:<br>App ID: <b>${esc(W.packageName)}</b><br>Password: the one you set here.</div>` : ''}
+    <h3>⬆️ App Update</h3>${chk('update.force', 'Force update (blocking screen)', 'Existing users of this package must download this version to keep using the app')}
+    <label class="f">What's new (shown on the Update Required screen)</label><textarea data-k="update.notes" style="min-height:80px;font-family:inherit" placeholder="Bug fixes, performance improvements…">${esc(W.update.notes)}</textarea>`;
+  } else {
+    const rows = [['App Name', W.name, 0], ['Package', W.packageName, 0], ['Version', `${W.versionName} (${W.versionCode})`, 0], ['Content', W.sourceType === 'html' ? (W.fileName || `${W.html.length} chars of HTML`) : W.url, 1], ['Display', `${W.orientation} · Status: ${W.showStatusBar ? 'Yes' : 'No'} · Action: ${W.showActionBar ? 'Yes' : 'No'} · Keep on: ${W.keepScreenOn ? 'Yes' : 'No'} · Color: ${W.barColor}`, 2], ['Permissions', W.permissions.length + ' selected', 3], ['Icon', W.icon ? 'Custom' : 'Default', 4], ['Splash', W.splash ? 'Custom' : 'Default', 5], ['WebView', Object.values(W.webview).filter(v => v === true).length + ' options enabled', 6], ['AdMob Ads', W.ads.enabled ? 'Yes' : 'No', 7], ['Push', W.push.enabled ? 'Enabled' : 'Off', 8], ['Update', W.update.force ? 'Forced' : 'Optional', 8]];
+    h = `<h3 style="margin-top:0">Summary: Is everything correct?</h3>${rows.map(([a, b, i]) => `<div class="sum"><div><b>${a}</b>${esc(b)}</div><button class="btn line sm" onclick="STEP=${i};renderStep()">✎</button></div>`).join('')}`;
+  }
+  shell('projects', `<div class="steps"><span>Step ${s + 1} / 10 · ${STEP_NAMES[s]}</span><span>${pct}%</span></div><div class="progress"><i style="width:${pct}%"></i></div><div class="card" id="wz">${h}</div>
+    <div class="foot"><button class="btn line" id="back">${s ? 'Back' : 'Cancel'}</button><button class="btn" id="next">${s === 9 ? '⚡ Save & Build APK' : 'Next'}</button></div>`);
+  bindStep();
+}
+function bindStep() {
+  const wz = $('#wz');
+  $$('[data-k]', wz).forEach(el => {
+    el.oninput = el.onchange = () => {
+      let v = el.type === 'checkbox' ? el.checked : el.dataset.num ? Math.max(1, +el.value || 1) : el.value;
+      setPath(W, el.dataset.k, v);
+      if (el.dataset.k === 'name' && !W._pkgEdited) { W.packageName = autoPkg(v); const p = $('[data-k=packageName]'); if (p) p.value = W.packageName; }
+      if (el.dataset.k === 'packageName') { W._pkgEdited = true; W.packageName = v.toLowerCase().trim(); }
+      if (el.type === 'checkbox' && ['ads.enabled', 'push.enabled'].includes(el.dataset.k)) renderStep();
+      if (el.dataset.k === 'packageName') { const m = MYAPPS.find(a => a.packageName === W.packageName); if (m && W.versionCode <= m.versionCode) { W.versionCode = m.versionCode + 1; } }
+      if (el.dataset.k === 'html') htmlCheck();
+    };
+  });
+  $$('[data-k=name],[data-k=packageName]', wz).forEach(el => el.addEventListener('change', () => renderStep()));
+  $$('[data-perm]', wz).forEach(el => el.onchange = () => { const s = new Set(W.permissions); el.checked ? s.add(el.dataset.perm) : s.delete(el.dataset.perm); W.permissions = [...s]; });
+  $$('[data-seg]', wz).forEach(g => $$('button', g).forEach(b => b.onclick = () => { setPath(W, g.dataset.seg, b.dataset.v); renderStep(); }));
+  $$('[data-sw]', wz).forEach(g => $$('span', g).forEach(b => b.onclick = () => { W[g.dataset.sw] = b.dataset.c; renderStep(); }));
+  const pick = (id, accept, fn) => { const b = $(id); if (!b) return; b.onclick = () => { const i = document.createElement('input'); i.type = 'file'; i.accept = accept; i.onchange = () => i.files[0] && fn(i.files[0]); i.click(); }; };
+  pick('#pick', '.html,.htm,text/html', async f => { W.html = await fileToText(f); W.fileName = f.name; if (!W.name) { W.name = f.name.replace(/\.\w+$/, ''); if (!W._pkgEdited) W.packageName = autoPkg(W.name); } renderStep(); });
+  pick('#pickicon', 'image/*', async f => { W.icon = await imgToDataUrl(f, 512); renderStep(); });
+  pick('#picksplash', 'image/*', async f => { W.splash = await imgToDataUrl(f, 512); renderStep(); });
+  if ($('#pv')) $('#pv').onclick = () => { $('#pvbox').innerHTML = '<iframe class="pv" sandbox="allow-scripts"></iframe>'; $('#pvbox iframe').srcdoc = W.html; };
+  if ($('#chkbox')) htmlCheck();
+  $('#back').onclick = () => { if (STEP) { STEP--; renderStep(); } else location.hash = '#/projects'; };
+  $('#next').onclick = async () => { const e = validateStep(); if (e) return toast(e); if (STEP < 9) { STEP++; renderStep(); } else saveAndBuild(); };
+}
+function htmlCheck() {
+  const b = $('#chkbox'); if (!b) return; const h = W.html;
+  if (!h.trim()) { b.innerHTML = ''; return; }
+  const w = []; if (!/<html|<body|<!doctype/i.test(h)) w.push('No &lt;html&gt;/&lt;body&gt; tag found.'); if (!/name=["']viewport/i.test(h)) w.push('No viewport meta tag — add one for correct mobile scaling.');
+  b.innerHTML = w.length ? `<div class="ok w">⚠️ ${w.join('<br>')}</div>` : '<div class="ok">✓ HTML structure looks good</div>';
+}
+function validateStep() {
+  if (STEP === 0) { if (!W.name.trim()) return 'Enter an app name'; if (!/^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$/.test(W.packageName)) return 'Package name must look like com.company.app (lowercase letters/numbers)'; }
+  if (STEP === 1) { if (W.sourceType === 'html' && !W.html.trim()) return 'Select an HTML file or paste code'; if (W.sourceType === 'url' && !/^https?:\/\/.+\..+/.test(W.url)) return 'Enter a valid website URL'; }
+  if (STEP === 8 && W.push.enabled && W.push.password && W.push.password.length < 6) return 'Push password must be at least 6 characters';
+  if (STEP === 8 && W.push.enabled && !W.push.password && !MYAPPS.find(a => a.packageName === W.packageName)) return 'Set a push password (you will need it on the Push dashboard)';
+  return '';
+}
+async function saveAndBuild() {
+  const btn = $('#next'); btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    const body = JSON.parse(JSON.stringify(W)); delete body._id;
+    const saved = W._id ? await api('/api/projects/' + W._id, { method: 'PUT', body }) : await api('/api/projects', { method: 'POST', body });
+    W._id = saved.id;
+    const r = await api(`/api/projects/${saved.id}/build`, { method: 'POST', body: {} });
+    location.hash = '#/build/' + r.buildId;
+  } catch (e) { toast(e.message, 7000); btn.disabled = false; btn.textContent = '⚡ Save & Build APK'; }
+}
+
+/* ---------- build console ---------- */
+let pollT = null;
+function pageBuild(id) {
+  shell('projects', `<h1>Build Console</h1><div class="bc"><div style="display:flex;justify-content:space-between;align-items:center"><div><b style="font-size:19px" id="bt">Building…</b><div style="opacity:.85;font-size:13px" id="bs">This usually takes a few minutes — feel free to stay on this page.</div></div><div id="el" style="font-size:22px;font-weight:700">00:00</div></div>
+  <div class="dots" id="dots">${['Connect', 'Configure', 'Package', 'Sign', 'Done'].map((s, i) => `<div data-i="${i}"><i>${i + 1}</i>${s}</div>`).join('')}</div></div><div class="term" id="log"></div><div class="foot"><button class="btn line" id="cancel">Cancel Build</button></div>`);
+  $('#cancel').onclick = () => api(`/api/builds/${id}/cancel`, { method: 'POST' });
+  clearInterval(pollT);
+  const tick = async () => {
+    let b; try { b = await api('/api/builds/' + id); } catch (e) { clearInterval(pollT); return; }
+    if (!$('#log')) return clearInterval(pollT);
+    const m = String(~~(b.elapsed / 60)).padStart(2, '0') + ':' + String(b.elapsed % 60).padStart(2, '0'); $('#el').textContent = m;
+    $$('#dots div').forEach(d => d.classList.toggle('on', +d.dataset.i < b.step || b.status === 'success'));
+    const L = $('#log'), stick = L.scrollTop + L.clientHeight > L.scrollHeight - 30; L.innerHTML = b.logs.map(l => `<u>${l.t}</u> ${esc(l.s)}`).join('\n'); if (stick) L.scrollTop = L.scrollHeight;
+    if (b.status !== 'running') {
+      clearInterval(pollT); $('#cancel').remove();
+      if (b.status === 'success') { $('#bt').textContent = 'Build successful 🎉'; const r = b.result; modal(`<div class="hd"><div style="font-size:40px">⬇️</div><div style="opacity:.9;letter-spacing:2px;font-size:12px">BUILD SUCCESSFUL</div><h2 style="margin:6px 0 0">${esc(r.name)}</h2></div><div class="bd"><div class="kv"><span class="mut">Package</span><b>${esc(r.packageName)}</b></div><div class="kv"><span class="mut">Version</span><b>${esc(r.versionName)} (${r.versionCode})</b></div><div class="kv"><span class="mut">Size</span><b>${mb(r.size)}</b></div><div class="kv"><span class="mut">Signature</span><b style="color:var(--ok)">✓ V1+V2 Signed</b></div><a class="btn" style="width:100%;justify-content:center;margin-top:14px" href="${esc(r.url)}" download>⬇ Download APK</a><div class="acts" style="margin-top:10px"><button class="btn line" style="flex:1" onclick="location.hash='#/wizard';this.closest('.modal').remove()">Build another</button><button class="btn line" style="flex:1" onclick="location.hash='#/projects';this.closest('.modal').remove()">My Projects</button></div></div>`); }
+      else { $('#bt').textContent = b.status === 'cancelled' ? 'Build cancelled' : 'Build failed'; $('#bs').textContent = b.error || ''; }
+    }
+  };
+  tick(); pollT = setInterval(tick, 1200);
+}
+
+/* ---------- push dashboard ---------- */
+let PUSH = sessionStorage.getItem('ptk') || null, PKG = sessionStorage.getItem('ppkg') || '', PTAB = 'send';
+async function pagePush() {
+  const h = `<div style="display:flex;gap:12px;align-items:center"><div style="font-size:30px;background:#7c5cff;border-radius:14px;padding:8px 12px">🔔</div><div><h1 style="margin:0">Push Notifications</h1><span class="mut">Send notifications to your app users</span></div></div>
+  <div class="card" style="margin-top:14px"><span class="dot"></span><b>Server Online</b> <span class="mut">— ${CFG.pushReady ? 'Push server ready' : 'FCM not configured on this server'}</span></div>`;
+  if (!PUSH) {
+    shell('push', h + `<div class="card" style="margin-top:12px"><label class="f" style="margin-top:0">YOUR APP ID</label><input type="text" id="pk" list="pkl" placeholder="com.yourapp.xyz" value="${esc(PKG)}" autocapitalize="none"><datalist id="pkl">${ME._apps?.map(a => `<option value="${esc(a.packageName)}">`).join('') || ''}</datalist><div class="mut" style="margin:4px 0">Enter your app's package name (e.g. com.apkforge.myapp)</div>
+    <label class="f">App password</label><input type="password" id="pw" placeholder="App Password"><div class="mut" style="color:var(--warn);margin:4px 0">🔒 Enter the password you set when building the app</div><button class="btn" style="width:100%;justify-content:center;margin-top:8px" id="lg">Load &amp; Authenticate</button></div>`);
+    api('/api/updates').then(a => { ME._apps = a; const d = $('#pkl'); if (d) d.innerHTML = a.map(x => `<option value="${esc(x.packageName)}">`).join(''); }).catch(() => {});
+    $('#lg').onclick = async () => { try { const r = await api('/api/push/login', { method: 'POST', body: { packageName: $('#pk').value.trim(), password: $('#pw').value } }, null); PUSH = r.token; PKG = $('#pk').value.trim(); sessionStorage.setItem('ptk', PUSH); sessionStorage.setItem('ppkg', PKG); pagePush(); } catch (e) { toast(e.message); } };
+    return;
+  }
+  let data; try { data = await api('/api/push/devices', {}, PUSH); } catch (e) { PUSH = null; sessionStorage.removeItem('ptk'); return pagePush(); }
+  const tabs = `<div class="card" style="margin-top:12px;border-color:#16a34a"><b style="color:var(--ok)">🛡 Authenticated</b><div class="mut">${esc(PKG)}</div><button class="btn line sm" style="float:right;margin-top:-34px" id="chg">Change</button></div>
+  <div class="tabs">${[['send', '📤 Send'], ['devices', `📱 Devices (${data.devices.length})`], ['add', '➕ Add Token']].map(([k, l]) => `<button data-t="${k}" class="${PTAB === k ? 'on' : ''}">${l}</button>`).join('')}</div>`;
+  let body = '';
+  if (PTAB === 'send') body = `<div class="card"><b>COMPOSE NOTIFICATION</b><label class="f">Title *</label><input type="text" id="tt" placeholder="Notification title"><label class="f">Message *</label><textarea id="mm" style="min-height:90px;font-family:inherit" placeholder="Write your message here…"></textarea>
+    <label class="f">Image (optional)</label><div class="seg"><button type="button" id="up" class="on">📁 Upload Image</button><button type="button" id="ul">🔗 Image URL</button></div><div id="imgbox" style="margin-top:10px"><button class="btn line" id="pickimg" style="width:100%;justify-content:center;height:90px">🖼 Tap to select image (JPG, PNG, GIF, WEBP)</button></div>
+    <label class="f">Send to</label><select id="tg"><option value="">All devices (${data.devices.length})</option>${data.devices.map(d => `<option value="${d.id}">${esc(d.model || d.id)} · ${ago(d.seen)}</option>`).join('')}</select>
+    <button class="btn" style="width:100%;justify-content:center;margin-top:14px" id="snd">🚀 Send Notification</button></div>
+    <h3>History</h3>${data.history.length ? `<div class="card"><table>${data.history.map(h => `<tr><td><b>${esc(h.title)}</b><br><span class="mut">${esc(h.message)}</span></td><td class="mut">✓${h.ok} ✗${h.bad}<br>${ago(h.date)}</td></tr>`).join('')}</table></div>` : '<div class="mut">Nothing sent yet.</div>'}`;
+  if (PTAB === 'devices') body = `<div class="card">${data.devices.length ? `<table>${data.devices.map(d => `<tr><td><b>${esc(d.model || 'Device')}</b><br><span class="mut">Android ${esc(d.android || '?')} · ${esc(d.token)}</span></td><td class="mut">seen ${ago(d.seen)}</td><td><button class="btn line sm" data-del="${d.id}">Remove</button></td></tr>`).join('')}</table>` : '<span class="mut">No devices yet. Install the APK and open it once — its FCM token registers automatically.</span>'}</div>`;
+  if (PTAB === 'add') body = `<div class="card"><label class="f" style="margin-top:0">FCM device token</label><textarea id="tk" style="min-height:90px" placeholder="Paste a token"></textarea><button class="btn" style="margin-top:10px" id="addt">Add token</button></div>`;
+  shell('push', h + tabs + body);
+  $('#chg').onclick = () => { PUSH = null; sessionStorage.removeItem('ptk'); pagePush(); };
+  $$('[data-t]').forEach(b => b.onclick = () => { PTAB = b.dataset.t; pagePush(); });
+  $$('[data-del]').forEach(b => b.onclick = async () => { await api('/api/push/devices/' + b.dataset.del, { method: 'DELETE' }, PUSH); pagePush(); });
+  if ($('#addt')) $('#addt').onclick = async () => { try { await api('/api/push/token', { method: 'POST', body: { token: $('#tk').value } }, PUSH); toast('Token added'); PTAB = 'devices'; pagePush(); } catch (e) { toast(e.message); } };
+  if ($('#snd')) {
+    let imgData = '', imgUrl = '';
+    const setMode = m => { $('#up').classList.toggle('on', m === 'up'); $('#ul').classList.toggle('on', m === 'ul'); imgData = imgUrl = ''; $('#imgbox').innerHTML = m === 'up' ? '<button class="btn line" id="pickimg" style="width:100%;justify-content:center;height:90px">🖼 Tap to select image (JPG, PNG, GIF, WEBP)</button>' : '<input type="url" id="iu" placeholder="https://…/image.jpg">'; if (m === 'up') bindPick(); else $('#iu').oninput = e => imgUrl = e.target.value; };
+    const bindPick = () => $('#pickimg').onclick = () => { const i = document.createElement('input'); i.type = 'file'; i.accept = 'image/*'; i.onchange = async () => { const f = i.files[0]; if (!f) return; const im = new Image(); im.onload = () => { const s = Math.min(1, 1024 / im.width), c = document.createElement('canvas'); c.width = im.width * s; c.height = im.height * s; c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); imgData = c.toDataURL('image/jpeg', .85); $('#imgbox').innerHTML = `<img src="${imgData}" style="max-width:100%;border-radius:12px">`; }; im.src = URL.createObjectURL(f); }; i.click(); };
+    bindPick(); $('#up').onclick = () => setMode('up'); $('#ul').onclick = () => setMode('ul');
+    $('#snd').onclick = async () => { const b = $('#snd'); b.disabled = true; try { const r = await api('/api/push/send', { method: 'POST', body: { title: $('#tt').value, message: $('#mm').value, imageData: imgData, imageUrl: imgUrl, deviceId: $('#tg').value } }, PUSH); toast(`Sent to ${r.ok} device(s)${r.failed ? `, ${r.failed} failed` : ''}`); pagePush(); } catch (e) { toast(e.message, 6000); b.disabled = false; } };
+  }
+}
+
+/* ---------- updates ---------- */
+async function pageUpdates() {
+  const apps = await api('/api/updates');
+  shell('updates', `<h1>App Updates</h1><div class="card ok" style="margin-bottom:12px">To update an app: build a new project using the <b>same package name</b> and a <b>higher version code</b>. Everyone who has the old app will see <b>Update Required</b> with a Download button.</div>
+  ${apps.length ? apps.map(a => `<div class="card" style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><div><b style="font-size:17px">${esc(a.name)}</b> <span class="pill">v${esc(a.versionName)} · ${a.versionCode}</span><div class="mut">${esc(a.packageName)} · ${mb(a.size)} · ${a.devices} push device(s)</div></div>
+    <a class="btn sm" href="${esc(a.releases[0].url)}" download>⬇ Latest APK</a></div>
+    ${chkRaw(a)}<label class="f">Release notes shown on the update screen</label><textarea data-notes="${esc(a.packageName)}" style="min-height:70px;font-family:inherit">${esc(a.notes || '')}</textarea><button class="btn sm" data-save="${esc(a.packageName)}" style="margin-top:8px">Save</button>
+    <h4 style="margin:16px 0 4px">Releases</h4><table>${a.releases.map(r => `<tr><td>v${esc(r.versionName)} (${r.versionCode})</td><td class="mut">${mb(r.size)} · ${ago(r.date)}</td><td>${r.versionCode === a.versionCode ? '<span class="pill">live</span>' : `<button class="btn line sm" data-rb="${esc(a.packageName)}|${r.versionCode}">Make live</button>`}</td></tr>`).join('')}</table></div>`).join('') : '<div class="card mut">No apps built yet.</div>'}`);
+  $$('[data-save]').forEach(b => b.onclick = async () => { const p = b.dataset.save; await api('/api/updates/' + p, { method: 'PATCH', body: { notes: $(`[data-notes="${p}"]`).value, force: $(`[data-force="${p}"]`).checked } }); toast('Saved'); });
+  $$('[data-rb]').forEach(b => b.onclick = async () => { const [p, v] = b.dataset.rb.split('|'); if (!confirm('Make this version the live update?')) return; await api('/api/updates/' + p, { method: 'PATCH', body: { rollbackTo: v } }); pageUpdates(); });
+}
+const chkRaw = a => `<label class="chk"><input type="checkbox" data-force="${esc(a.packageName)}" ${a.force ? 'checked' : ''}><span>Force update<small>Block the app until the user installs the latest version</small></span></label>`;
+
+/* ============ router ============ */
+async function route() {
+  clearInterval(pollT);
+  if (!TOKEN) return loginPage();
+  if (!ME) return;
+  const [, page, arg] = (location.hash || '#/home').split('/');
+  try {
+    if (page === 'projects') await pageProjects(); else if (page === 'wizard') await pageWizard(arg); else if (page === 'build') pageBuild(arg);
+    else if (page === 'push') await pagePush(); else if (page === 'updates') await pageUpdates(); else if (page === 'templates') pageTemplates(); else if (page === 'more') pageMore(); else await pageHome();
+  } catch (e) { toast(e.message, 5000); }
+}
+async function boot() {
+  try { CFG = await api('/api/config', {}, null); } catch (_) {}
+  if (TOKEN) { try { ME = (await api('/api/me')).user; } catch (_) { TOKEN = null; } }
+  route();
+}
+addEventListener('hashchange', route);
+boot();
+</script>
+</body>
+</html>
